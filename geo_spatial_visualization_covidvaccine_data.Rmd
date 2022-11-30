@@ -3,10 +3,10 @@ title: "Geo-spatial-visualization"
 author: "Harinath Reddy"
 date: "2022-11-30"
 output: pdf_document
----
+---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
 
 
-## setting up the wprkiong directory
+## setting up the workiong directory
 
 ```{r}
 setwd("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration")
@@ -14,7 +14,7 @@ setwd("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration
 
 ```
 
-
+### loading the data files
 ```{r}
 
 pfizer <- read.csv("C:\\Users\\harin\\Statistical_graphs_and_exploration\\pfizer.xlsx")
