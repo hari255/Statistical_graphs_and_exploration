@@ -6,15 +6,25 @@ output: pdf_document
 ---
 
 
+## setting up the wprkiong directory
+
 ```{r}
 setwd("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration")
 
-pfizer <- read.csv("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration\\pfizer.xlsx")
 
-Moderna <- read.csv <- ("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration\\Moderna.xlsx")
-
-janssen <- read.csv("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration\\janssen.xlsx")
 ```
+
+
+```{r}
+
+pfizer <- read.csv("C:\\Users\\harin\\Statistical_graphs_and_exploration\\pfizer.xlsx")
+
+Moderna <- read.csv ("C:\\Users\\harin\\Statistical_graphs_and_exploration\\moderna.xlsx")
+
+janssen <- read.csv("C:\\Users\\harin\\Statistical_graphs_and_exploration\\janssen.xlsx")
+```
+
+
 ```{r}
 
 library(tidyverse)
