@@ -1,0 +1,53 @@
+---
+title: "STAT_663 Exercise 7"
+author: "Harinath Reddy"
+date: "2022-11-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+library(geojsonio)
+library(leaflet)
+library(sp)
+library(rgeos)
+
+```
+
+
+```{r}
+x1 <- c(6, 8, 8, 6, 6)
+x2 <- c(6, 6, 4, 4, 6)
+
+
+y1 <- c(5, 6, 8, 10, 5)
+y2 <- c(8, 3, 2, 8, 8)
+
+
+Poly1 <- Polygon(cbind(x1, x2))
+Poly2 <- Polygon(cbind(y1, y2))
+Polys1 <- Polygons(list(Poly1), "s1")
+Polys2 <- Polygons(list(Poly2), "s2")
+SPolys <- SpatialPolygons(list(Polys1, Polys2), 1:2)
+
+
+leaflet(height = "300px") %>% addPolygons(data = SPolys)
+
+```
+
+
+```{r}
+library(leaflet)
+dmap <- leaflet() %>% 
+  setView(lng = -77.0353, lat = 38.8895, zoom = 15) %>% 
+  addTiles()%>%
+  addMarkers(lng = -77.0353, lat = 38.8895,popup = "Washington Monument", label = "Washington Monumnet, D.C")
+dmap
+
+```
+

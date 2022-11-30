@@ -1,0 +1,184 @@
+---
+title: "assignment_5"
+author: "Harinath Reddy"
+date: "2022-11-16"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+
+
+```{r}
+library(cdcfluview); library(dplyr)
+library(tsibble); library(lubridate)
+library(fable);library(ggplot2)
+library(feasts)
+```
+
+```{r}
+# Prepare the data
+usflu.raw <- ilinet("national", years = 2010:2018)
+names(usflu.raw)
+usflu <- usflu.raw %>%
+  mutate(
+    date = as.Date(paste0(year, sprintf("%02d", week), "00"),
+format="%Y%W%w"),
+dec_date = decimal_date(week_start),
+week = yearweek(week_start),
+time_in_year = dec_date%%1)%>%
+  dplyr::filter(!is.na(dec_date))
+
+usflu.ts <- as_tsibble(usflu, index = week)
+```
+
+```{r}
+
+autoplot.weighted_ili<- usflu.ts %>% autoplot(weighted_ili) + theme_minimal() + 
+  labs(title="autoploy weight",
+       x="", y="weight ")
+autoplot.weighted_ili
+``` 
+
+```{r}
+gg_season.weight <- usflu.ts %>% gg_season(weighted_ili) + theme_minimal() + 
+  labs(title="seasonal weight ", x="season", y="weight ")
+gg_season.weight
+```
+
+```{r}
+acf.weight<- usflu.ts %>% ACF(weighted_ili) %>%
+  autoplot() + theme_minimal() + labs(title="Daily new death ACF",
+                         x="ACF", y="weight")
+acf.weight
+
+```
+
+```{r}
+
+pacf.weight<- usflu.ts %>% PACF(weighted_ili) %>%
+  autoplot() + theme_minimal() + labs(title="Daily new death ACF",
+                         x="PACF", y="weight")
+pacf.weight
+
+
+
+```
+
+
+
+
+** (a) AR(1) model with ϕ1 = 0.9 and σ2 = 1.
+```{r}
+tsibble(idx = seq_len(200), sim = 1 + arima.sim(list(ar = c(0.9)), n = 200), index = idx) %>%
+autoplot(sim) + ylab("") + ggtitle("AR(1)")
+  
+```
+
+** (a) AR(1) model with ϕ1 = 0.9 and σ2 = 1.
+```{r}
+
+tsibble(idx = seq_len(200), sim = 1 + arima.sim(list(ar = c(0.8)), n = 200), index = idx) %>%
+autoplot(sim) + ylab("") + ggtitle("MA(1)")
+
+
+```
+
+
+```{r}
+
+tsibble(idx = seq_len(200), sim = 1 + arima.sim(list(ar = c(0.3,-0.4)), n = 200), index = idx) %>%
+autoplot(sim) + ylab("") + ggtitle("MA(2)")
+
+
+
+```
+
+
+
+
+```{r}
+
+library(IDDA)
+data("state.long")
+
+```
+
+
+```{r}
+va_state<- IDDA::state.long%>%
+  filter(State=="Virginia")
+
+va_state
+```
+
+
+*** splitting the data into training and testing sets also seperating data from dependent variable***
+
+```{r}
+state.ts <- as_tsibble(state.long, key = State) %>%
+group_by(State) %>%
+mutate(Infected = Infected/1000) %>%
+mutate(YDA_Infected = lag(Infected, order_by = DATE)) %>%
+mutate(YDA_Death = lag(Death, order_by = DATE)) %>%
+mutate(Y.Infected = Infected - YDA_Infected) %>%
+mutate(Y.Death = Death - YDA_Death) %>%
+mutate(cum_infected = cumsum(Infected))%>%
+mutate(cum_death = cumsum(Death)) %>%
+dplyr::filter(!is.na(Y.Infected)) %>%
+dplyr::filter(!is.na(Y.Death)) %>%
+dplyr::select(-c(YDA_Infected, YDA_Death))%>%
+filter(State=="Virginia") 
+
+```
+
+```{r}
+Virginia.ts <- state.ts %>%
+dplyr::filter(State == "Virginia") %>%
+dplyr::select(Infected, Death, cum_infected, cum_death, Y.Death, Y.Infected)
+
+
+```
+
+
+```{r}
+arima.fit <-Virginia.ts %>%
+  model(arima = ARIMA(Y.Death ~ PDQ(0,0,0)))
+report(arima.fit)
+```
+
+## Selected Model is ARIMA(0,1,2) with Log-likelyhood estimator of -1361.58 which is infact very poor.
+
+
+```{r}
+
+arima.fit %>% gg_tsresiduals(lag=36)
+
+```
+
+```{r}
+## The resudials plot seems obvious that the error terms are normally distributed.
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

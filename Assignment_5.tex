@@ -1,0 +1,414 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={assignment\_5},
+  pdfauthor={Harinath Reddy},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{assignment\_5}
+\author{Harinath Reddy}
+\date{2022-11-16}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(cdcfluview); }\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tsibble); }\FunctionTok{library}\NormalTok{(lubridate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'tsibble'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, union
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: timechange
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'lubridate'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tsibble':
+## 
+##     interval
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     date, intersect, setdiff, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(fable);}\FunctionTok{library}\NormalTok{(ggplot2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: fabletools
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(feasts)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Prepare the data}
+\NormalTok{usflu.raw }\OtherTok{\textless{}{-}} \FunctionTok{ilinet}\NormalTok{(}\StringTok{"national"}\NormalTok{, }\AttributeTok{years =} \DecValTok{2010}\SpecialCharTok{:}\DecValTok{2018}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(usflu.raw)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "region_type"      "region"           "year"             "week"            
+##  [5] "weighted_ili"     "unweighted_ili"   "age_0_4"          "age_25_49"       
+##  [9] "age_25_64"        "age_5_24"         "age_50_64"        "age_65"          
+## [13] "ilitotal"         "num_of_providers" "total_patients"   "week_start"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{usflu }\OtherTok{\textless{}{-}}\NormalTok{ usflu.raw }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{date =} \FunctionTok{as.Date}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(year, }\FunctionTok{sprintf}\NormalTok{(}\StringTok{"\%02d"}\NormalTok{, week), }\StringTok{"00"}\NormalTok{),}
+\AttributeTok{format=}\StringTok{"\%Y\%W\%w"}\NormalTok{),}
+\AttributeTok{dec\_date =} \FunctionTok{decimal\_date}\NormalTok{(week\_start),}
+\AttributeTok{week =} \FunctionTok{yearweek}\NormalTok{(week\_start),}
+\AttributeTok{time\_in\_year =}\NormalTok{ dec\_date}\SpecialCharTok{\%\%}\DecValTok{1}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(dec\_date))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in strptime(x, format, tz = "GMT"): (0-based) yday 368 in year 2014 is
+## invalid
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{usflu.ts }\OtherTok{\textless{}{-}} \FunctionTok{as\_tsibble}\NormalTok{(usflu, }\AttributeTok{index =}\NormalTok{ week)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{autoplot.weighted\_ili}\OtherTok{\textless{}{-}}\NormalTok{ usflu.ts }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{autoplot}\NormalTok{(weighted\_ili) }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"autoploy weight"}\NormalTok{,}
+       \AttributeTok{x=}\StringTok{""}\NormalTok{, }\AttributeTok{y=}\StringTok{"weight "}\NormalTok{)}
+\NormalTok{autoplot.weighted\_ili}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gg\_season.weight }\OtherTok{\textless{}{-}}\NormalTok{ usflu.ts }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{gg\_season}\NormalTok{(weighted\_ili) }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"seasonal weight "}\NormalTok{, }\AttributeTok{x=}\StringTok{"season"}\NormalTok{, }\AttributeTok{y=}\StringTok{"weight "}\NormalTok{)}
+\NormalTok{gg\_season.weight}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{acf.weight}\OtherTok{\textless{}{-}}\NormalTok{ usflu.ts }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{ACF}\NormalTok{(weighted\_ili) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{autoplot}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"Daily new death ACF"}\NormalTok{,}
+                         \AttributeTok{x=}\StringTok{"ACF"}\NormalTok{, }\AttributeTok{y=}\StringTok{"weight"}\NormalTok{)}
+\NormalTok{acf.weight}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pacf.weight}\OtherTok{\textless{}{-}}\NormalTok{ usflu.ts }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{PACF}\NormalTok{(weighted\_ili) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{autoplot}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title=}\StringTok{"Daily new death ACF"}\NormalTok{,}
+                         \AttributeTok{x=}\StringTok{"PACF"}\NormalTok{, }\AttributeTok{y=}\StringTok{"weight"}\NormalTok{)}
+\NormalTok{pacf.weight}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+** (a) AR(1) model with ϕ1 = 0.9 and σ2 = 1.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tsibble}\NormalTok{(}\AttributeTok{idx =} \FunctionTok{seq\_len}\NormalTok{(}\DecValTok{200}\NormalTok{), }\AttributeTok{sim =} \DecValTok{1} \SpecialCharTok{+} \FunctionTok{arima.sim}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{ar =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{)), }\AttributeTok{n =} \DecValTok{200}\NormalTok{), }\AttributeTok{index =}\NormalTok{ idx) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{autoplot}\NormalTok{(sim) }\SpecialCharTok{+} \FunctionTok{ylab}\NormalTok{(}\StringTok{""}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"AR(1)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+** (a) AR(1) model with ϕ1 = 0.9 and σ2 = 1.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tsibble}\NormalTok{(}\AttributeTok{idx =} \FunctionTok{seq\_len}\NormalTok{(}\DecValTok{200}\NormalTok{), }\AttributeTok{sim =} \DecValTok{1} \SpecialCharTok{+} \FunctionTok{arima.sim}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{ar =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.8}\NormalTok{)), }\AttributeTok{n =} \DecValTok{200}\NormalTok{), }\AttributeTok{index =}\NormalTok{ idx) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{autoplot}\NormalTok{(sim) }\SpecialCharTok{+} \FunctionTok{ylab}\NormalTok{(}\StringTok{""}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"MA(1)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tsibble}\NormalTok{(}\AttributeTok{idx =} \FunctionTok{seq\_len}\NormalTok{(}\DecValTok{200}\NormalTok{), }\AttributeTok{sim =} \DecValTok{1} \SpecialCharTok{+} \FunctionTok{arima.sim}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{ar =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.3}\NormalTok{,}\SpecialCharTok{{-}}\FloatTok{0.4}\NormalTok{)), }\AttributeTok{n =} \DecValTok{200}\NormalTok{), }\AttributeTok{index =}\NormalTok{ idx) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{autoplot}\NormalTok{(sim) }\SpecialCharTok{+} \FunctionTok{ylab}\NormalTok{(}\StringTok{""}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"MA(2)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(IDDA)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"state.long"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{va\_state}\OtherTok{\textless{}{-}}\NormalTok{ IDDA}\SpecialCharTok{::}\NormalTok{state.long}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(State}\SpecialCharTok{==}\StringTok{"Virginia"}\NormalTok{)}
+
+\NormalTok{va\_state}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 345 x 7
+##    State    Region Division           pop DATE       Infected Death
+##    <chr>    <fct>  <fct>            <int> <date>        <int> <int>
+##  1 Virginia South  South Atlantic 8517685 2020-12-31   349584  5032
+##  2 Virginia South  South Atlantic 8517685 2020-12-30   344343  4982
+##  3 Virginia South  South Atlantic 8517685 2020-12-29   340297  4918
+##  4 Virginia South  South Atlantic 8517685 2020-12-28   336173  4857
+##  5 Virginia South  South Atlantic 8517685 2020-12-27   333570  4850
+##  6 Virginia South  South Atlantic 8517685 2020-12-26   329575  4833
+##  7 Virginia South  South Atlantic 8517685 2020-12-25   327990  4816
+##  8 Virginia South  South Atlantic 8517685 2020-12-24   323913  4788
+##  9 Virginia South  South Atlantic 8517685 2020-12-23   319131  4757
+## 10 Virginia South  South Atlantic 8517685 2020-12-22   314479  4701
+## # ... with 335 more rows
+\end{verbatim}
+
+*** splitting the data into training and testing sets also seperating
+data from dependent variable***
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state.ts }\OtherTok{\textless{}{-}} \FunctionTok{as\_tsibble}\NormalTok{(state.long, }\AttributeTok{key =}\NormalTok{ State) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{group\_by}\NormalTok{(State) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{Infected =}\NormalTok{ Infected}\SpecialCharTok{/}\DecValTok{1000}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{YDA\_Infected =} \FunctionTok{lag}\NormalTok{(Infected, }\AttributeTok{order\_by =}\NormalTok{ DATE)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{YDA\_Death =} \FunctionTok{lag}\NormalTok{(Death, }\AttributeTok{order\_by =}\NormalTok{ DATE)) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{Y.Infected =}\NormalTok{ Infected }\SpecialCharTok{{-}}\NormalTok{ YDA\_Infected) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{Y.Death =}\NormalTok{ Death }\SpecialCharTok{{-}}\NormalTok{ YDA\_Death) }\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{cum\_infected =} \FunctionTok{cumsum}\NormalTok{(Infected))}\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{cum\_death =} \FunctionTok{cumsum}\NormalTok{(Death)) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(Y.Infected)) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(Y.Death)) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(YDA\_Infected, YDA\_Death))}\SpecialCharTok{\%\textgreater{}\%}
+\FunctionTok{filter}\NormalTok{(State}\SpecialCharTok{==}\StringTok{"Virginia"}\NormalTok{) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Using `DATE` as index variable.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Virginia.ts }\OtherTok{\textless{}{-}}\NormalTok{ state.ts }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(State }\SpecialCharTok{==} \StringTok{"Virginia"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Infected, Death, cum\_infected, cum\_death, Y.Death, Y.Infected)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Adding missing grouping variables: `State`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{arima.fit }\OtherTok{\textless{}{-}}\NormalTok{Virginia.ts }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{model}\NormalTok{(}\AttributeTok{arima =} \FunctionTok{ARIMA}\NormalTok{(Y.Death }\SpecialCharTok{\textasciitilde{}} \FunctionTok{PDQ}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)))}
+\FunctionTok{report}\NormalTok{(arima.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Series: Y.Death 
+## Model: ARIMA(0,1,2) 
+## 
+## Coefficients:
+##           ma1      ma2
+##       -0.6529  -0.2045
+## s.e.   0.0510   0.0500
+## 
+## sigma^2 estimated as 164.6:  log likelihood=-1361.58
+## AIC=2729.15   AICc=2729.22   BIC=2740.67
+\end{verbatim}
+
+\hypertarget{selected-model-is-arima012-with-log-likelyhood-estimator-of--1361.58-which-is-infact-very-poor.}{%
+\subsection{Selected Model is ARIMA(0,1,2) with Log-likelyhood estimator
+of -1361.58 which is infact very
+poor.}\label{selected-model-is-arima012-with-log-likelyhood-estimator-of--1361.58-which-is-infact-very-poor.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{arima.fit }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{gg\_tsresiduals}\NormalTok{(}\AttributeTok{lag=}\DecValTok{36}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_5_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# The resudials plot seems obvious that the error terms are normally distributed.}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

@@ -1,0 +1,296 @@
+---
+title: "homework_6"
+author: "Harinath Reddy"
+date: "2022-11-24"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+```{r}
+library(dplyr)
+library(tsibble)
+library(fable)
+library(feasts)
+library(tidyr)
+library(ggplot2)
+```
+
+```{r}
+
+library(IDDA)
+data(state.ts)
+```
+
+
+```{r}
+## Using `DATE` as index variable.
+Virginia.ts <- state.ts %>%
+  dplyr::filter(State == "Virginia") %>%
+  dplyr::select(Death, Y.Death) %>%
+  mutate(YDA_Death = lag(Y.Death)) %>%
+  dplyr::filter(!is.na(YDA_Death))
+
+head(Virginia.ts )
+```
+
+## Creatiung the Training Data
+```{r}
+
+# time series plot death counts in Florida
+Virginia.ts %>%
+  autoplot(Y.Death)
+```
+
+
+# set training data from NOV 28 to DEC 04
+```{r}
+train <- Virginia.ts %>% 
+  filter_index("2020-01-23" ~ "2020-12-17
+               ")
+n <- nrow(train)
+```
+
+
+
+```{r}
+fit_trends <- train %>%
+  model(
+    Linear = TSLM(Y.Death ~ trend()),
+    exponential = TSLM(log(Y.Death + 1) ~ trend()),
+  )
+
+fc_trends <- fit_trends %>% fabletools::forecast( h = 7)
+
+```
+
+
+## Making Predictions 
+```{r}
+Virginia.ts %>%
+  dplyr::filter(DATE < train$DATE[n] + 7 ) %>%
+  autoplot(Y.Death) +
+  geom_line(data = fitted(fit_trends),
+            aes(y = .fitted, color = .model)) +
+  autolayer(fc_trends, alpha = 0.5, level = 95) +
+  labs(y = "Number of deaths",
+       title = "Daily new deaths in Virginia") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+```
+
+```{r}
+
+lm_fit <- train%>%
+  model(lm = TSLM(Y.Death ~ log(YDA_Death + 1)))
+report(lm_fit)
+
+
+```
+
+
+## Fitting the ETS Model
+```{r}
+ets_fit <-train %>%
+  model(ETS(Y.Death ~ error("A") + trend("A") + season("A"), opt_crit =
+"mse"))
+report(ets_fit)
+```
+
+```{r}
+
+residual_plot_linear_model <- gg_tsresiduals(lm_fit)
+
+residual_plot_linear_model
+```
+
+```{r}
+residual_plot_ets_model <- gg_tsresiduals(ets_fit)
+
+residual_plot_ets_model
+
+
+```
+
+
+## Yes the residuals appear to be reasonably normally distributed
+
+
+
+## Piecewise constant spline regression model with 15 interior knots
+```{r}
+
+n <- nrow(Virginia.ts)
+t <- 1:n
+y <- Virginia.ts$Y.Death
+
+# Knots
+N <- 15
+knots <- 1 + (n-1)/(N+1) * (0:N)
+
+# Piecewise constant spline basis
+t.rep <- matrix(rep(t, N), n, N)
+knot.L <- matrix(rep(knots[-(N + 1)], each = n), n, N)
+knot.R <- matrix(rep(knots[-1], each = n), n, N)
+B <- 1*((knot.L <= t.rep) & (t.rep < knot.R))
+X <- cbind(B, knots[N] < t & t <= n)
+
+M <- t(X) %*% X
+beta <- solve(M) %*% t(X) %*% y
+yhat <- X %*% beta
+Virginia.ts$pcs_preds <- yhat
+```
+
+
+
+```{r}
+
+# plot of reported vs piecewise constant spline fit
+pcs_p <- Virginia.ts %>%
+  ggplot(aes(x = DATE)) +
+  geom_line(aes(y = Y.Death, color = "Reported")) +
+  geom_line(aes(y = pcs_preds, color = "Fitted")) +
+  scale_color_manual(
+    values = c(Reported = "black", Fitted = "red")
+  ) +
+  labs(y = "Death count",
+       title = "Reported vs piecewise constant spline fit") +
+  guides(color = guide_legend(title = "Series"))
+
+pcs_p
+
+
+```
+
+### Truncated Power Spline 
+
+```{r}
+
+y <- Virginia.ts$Y.Death
+n <- nrow(Virginia.ts)
+t <- 1:n
+
+# knots
+N <- 10
+knots <- 1 + (n-1)/(N+1) * (0:N)
+
+# truncated power spline basis functions
+X <- matrix(1, n, N + 2)	
+X[, 2] <- t
+t.rep <- matrix(rep(t, N), n, N) 
+tmp <- t.rep - matrix(rep(knots[2:(N + 1)], each = n), n, N)
+X[, 3:(N+2)] <- tmp * (tmp > 0)
+
+# truncated power spline fit
+M <- t(X) %*% X
+beta <- solve(M) %*% t(X) %*% y
+yhat <- X %*% beta
+Virginia.ts$tps_preds <- yhat
+
+# plot of reported vs truncated power spline fit
+tps_p <- Virginia.ts %>%
+  ggplot(aes(x = DATE)) +
+  geom_line(aes(y = Y.Death, color = "Reported")) +
+  geom_line(aes(y = tps_preds, color = "Fitted")) +
+  scale_color_manual(
+    values = c(Reported = "black", Fitted = "red")
+  ) +
+  labs(y = "Death count",
+       title = "Reported vs truncated power spline fit") +
+  guides(color = guide_legend(title = "Series"))
+
+tps_p
+
+
+```
+
+
+
+## Natural spline regression model with 8 interior knots.
+
+```{r}
+
+library(splines)
+n <- nrow(Virginia.ts)
+t <- 1:n
+ns_fit <- lm(Y.Death ~ ns(t, df = 6), data = Virginia.ts)
+summary(ns_fit)
+ Virginia.ts$ns_preds <- predict(ns_fit)
+
+# Natural spline prediction and prediction intervals
+h <- 14
+t.new <- t[n] + (1:h)
+ns_PI <- predict(ns_fit, newdata = data.frame(t = t.new), 
+                 interval = "prediction", level = 0.95)
+
+ns_PI <- as.data.frame(ns_PI) %>%
+  mutate(DATE = ( Virginia.ts$DATE)[n] + 1:h)
+
+# Plot of reported vs natural spline fit
+ns <- Virginia.ts%>%
+  ggplot(aes(x = DATE)) +
+  geom_line(aes(y = Y.Death, color = "Reported")) +
+  geom_line(aes(y = ns_preds, color = "Fitted")) +
+  scale_color_manual(
+    values = c(Reported = "black", Fitted = "red")
+  ) +
+  labs(y = "Number of deaths",
+       title = "Reported vs natural spline regression fit") +
+  guides(color = guide_legend(title = "Series")) +
+  theme(legend.position = "bottom")
+
+ns
+
+# Plot of natural spline fit and its prediction intervals
+ns_int <- ns + 
+  geom_ribbon(
+    mapping = aes(y = fit, 
+                  ymin = lwr, 
+                  ymax = upr,
+                  fill = '95% Prediction Intervals'), 
+    data = ns_PI, alpha = 0.2) + 
+  geom_line(mapping = aes(y = fit, color = "Fitted"),
+            data = ns_PI,
+            key_glyph = "timeseries") +
+  labs(title = "Natural spline regression fit and prediction intervals")  +
+  guides(color = guide_legend(title = "Series"),
+         fill =  guide_legend(title = "")) +
+  theme(legend.position = "bottom")
+
+ns_int
+
+
+
+```
+
+
+
+### Smoothing spline regression model with knots automatically selected by the “mgcv” package.
+
+```{r}
+if(!require('mgcv')) install.packages('mgcv')
+library(mgcv)
+```
+
+
+```{r}
+ss_fit <- gam(Y.Death ~ s(t, bs = "cr"), data = Virginia.ts)
+summary(ss_fit)
+Virginia.ts$ss_preds <- predict(ss_fit)
+
+# Plot of reported vs smoothing spline fit
+Virginia.ts %>%
+  ggplot(aes(x = DATE)) +
+  geom_line(aes(y = Y.Death, color = "Reported")) +
+  geom_line(aes(y = ss_preds, color = "Fitted")) +
+  scale_color_manual(
+    values = c(Reported = "black", Fitted = "red")) +
+  labs(y = "Number of deaths",
+       title = "Reported vs smoothing spline fit") +
+  guides(color = guide_legend(title = "Series"))  +
+  theme(legend.position = "bottom")
+
+```

@@ -1,0 +1,260 @@
+---
+title: "STAT 663 Project 1"
+author: "Harinath Reddy"
+date: "2022-10-26"
+output: pdf_document
+---
+
+
+```{r}
+library(readxl)
+setwd("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration")
+
+pfizer <- read_excel("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration\\pfizer.xlsx")
+
+moderna <- read_excel("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration\\moderna.xlsx")
+
+janssen <- read_excel("C:\\Users\\harin\\OneDrive\\Documents\\Statistical_graphs_and_exploration\\janssen.xlsx")
+```
+
+```{r}
+
+library(tidyverse)
+library(dplyr)
+```
+
+
+
+```{r}
+library(devtools)
+devtools::install_github('FIRST-Data-Lab/IDDA', force = TRUE)
+
+```
+
+# creating variables from Datasets
+```{r}
+State <- pfizer$Jurisdiction
+Date <- pfizer$Week.of.Allocations
+Pfizer.1st.Dose.Allocations <- pfizer$X1st.Dose.Allocations 
+Pfizer.2nd.Dose.Allocations <- pfizer$X2nd.Dose.Allocations 
+Moderna.1st.Dose.Allocations <- moderna$X1st.Dose.Allocations
+Moderna.2nd.Dose.Allocations <- moderna$X2nd.Dose.Allocations 
+Janssen.1st.Dose.Allocations <- janssen$X1st.Dose.Allocations 
+All.Dose.Allocations <- 0.5 *(Pfizer.2nd.Dose.Allocations+Pfizer.1st.Dose.Allocations+Moderna.1st.Dose.Allocations + Moderna.2nd.Dose.Allocations)+Janssen.1st.Dose.Allocations
+Cum.Allocation <-cumsum(All.Dose.Allocations)
+
+```
+#1.Data Exploration.
+#setting the variables to equal legth
+```{r}
+length(State) <-length(pfizer$Jurisdiction)
+length(Date) <- length(pfizer$Jurisdiction)
+length(Pfizer.1st.Dose.Allocations) <- length(pfizer$Jurisdiction)
+length(Pfizer.2nd.Dose.Allocations) <- length(pfizer$Jurisdiction)
+length(Moderna.1st.Dose.Allocations) <- length(pfizer$Jurisdiction)
+length(Moderna.2nd.Dose.Allocations) <- length(pfizer$Jurisdiction)
+length(Janssen.1st.Dose.Allocations) <- length(pfizer$Jurisdiction)
+length(All.Dose.Allocations) <- length(pfizer$Jurisdiction)
+
+```
+
+#creating a dummy dataframe
+
+```{r}
+df <- data.frame(State, Date, Pfizer.1st.Dose.Allocations, Pfizer.2nd.Dose.Allocations, Moderna.1st.Dose.Allocations, Moderna.2nd.Dose.Allocations , Janssen.1st.Dose.Allocations, All.Dose.Allocations, Cum.Allocation)
+
+```
+
+```{r}
+population_data <- IDDA::pop.state
+
+```
+
+```{r}
+df<- left_join(df,population_data, by="State")
+
+```
+
+#creating Doseperpop Variable using Mutate
+
+```{r}
+library(dplyr)
+df <- mutate(df, Doseperpop=Cum.Allocation/df$population)
+
+```
+#Making sure to drop all the NA values
+
+
+```{r}
+week.allo.state <- df[!(df$State=="American Samoa" | df$State=="Palau" | df$State == "Guam" | df$State == "Mariana Islands" | df$State == "Marshall Islands" | df$State == "NewYorkCity" | df$State == "PuertoRico" |  df$State == "U.S.VirginIslands" | df$State == "Philadelphia"),] 
+```
+
+
+2.Visualization
+
+
+```{r}
+library(plotly)
+
+plot1 <- plot_ly() %>%
+  
+# Add Cook County’s time series using mode: lines+markers
+  add_trace(data = week.allo.state %>%
+              filter(State == 'Virginia'),x = ~Date , y = ~Janssen.1st.Dose.Allocations, type = 'scatter', mode = 'lines+markers',showlegend = TRUE, name = 'Janssen Dose') %>%
+  
+   add_trace(data = week.allo.state %>%
+               
+               filter(State == 'Virginia'),x = ~Date , y = ~Pfizer.2nd.Dose.Allocations, type = 'scatter', mode = 'lines+markers',showlegend = TRUE, name = 'Pfizer 2nd dose')%>%
+
+  add_trace(data = week.allo.state %>%
+               filter(State == 'Virginia'),x = ~Date , y = ~Pfizer.1st.Dose.Allocations, type = 'scatter', mode = 'lines+markers',showlegend = TRUE, name = 'Pfizer 1st dose')%>%
+
+  add_trace(data = week.allo.state %>%
+               filter(State == 'Virginia'),x = ~Date , y = ~Moderna.2nd.Dose.Allocations, type = 'scatter', mode ='lines+markers',showlegend = TRUE, name = 'Moderna 2nd dose')%>%
+
+  add_trace(data = week.allo.state %>%
+               filter(State == 'Virginia'),x = ~Date , y = ~Moderna.1st.Dose.Allocations, type = 'scatter', mode ='lines+markers',showlegend = TRUE, name = 'Moderna 1st dose')
+
+library(htmlwidgets)
+saveWidget(plot1, "Figure1.html", selfcontained = F)
+
+```
+Figure 1
+
+# (b)
+```{r}
+plot2 <- plot_ly() %>%
+
+add_trace(data = week.allo.state %>%
+filter(State == "Virginia"),
+x = ~Date, y = ~Doseperpop, type = 'scatter', mode = 'lines+markers',
+showlegend = TRUE, name = 'doseperpopulation')
+
+saveWidget(plot2, "Figure2.html", selfcontained = F)
+
+```
+Figure 2
+
+
+#(c) 
+```{r}
+library(plotly)
+
+plot3 <- plot_ly() %>%
+
+add_trace(data = week.allo.state %>%
+group_by(State)                        ,
+x = ~Date, y = ~Doseperpop, type = 'scatter', mode = 'lines+markers',
+showlegend = TRUE, name = 'doseperpopulation')
+  
+saveWidget(plot3, "Figure3.html", selfcontained = F)
+```
+Figure3
+
+#map(d)
+```{r}
+#install.packages("sp")
+#install.packages("sf")
+#install.packages("leaflet")
+#install.packages("geojsonio")
+#devtools::install_github("rstudio/leaflet")
+```
+1
+
+
+```{r}
+library(geojsonio); library(leaflet); library(dplyr); library(sp); library(sf)
+
+```
+
+
+
+
+```{r}
+library(sp)
+library(sf)
+library(rgeos)
+library(geojsonio); library(leaflet); library(dplyr)
+
+```
+
+```{r}
+df2<- data.frame(week.allo.state)
+df_date <- df2[757:1070,]
+
+```
+
+
+
+```{r}
+pal.state.factor <- colorFactor(palette = "YlOrRd", domain = All.Dose.Allocations)
+```
+
+```{r}
+library(geojsonio)
+states0 <- geojson_read(
+x = "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json"
+, what = "sp"
+)
+class(states0)  
+head(states0@data)
+```
+
+```{r}
+states1 <- states0
+states1@data <- states0@data %>%
+  mutate(name_ns = sapply(name, gsub, pattern = " ", 
+replacement = ""))
+
+states1@data <- left_join(states1@data, week.allo.state%>%
+                            
+                            
+                            filter(Date == as.Date('2021-03-01')), 
+by = c('name_ns' = 'State'))
+
+states1@data <- states1@data%>% mutate(new_bin_dosepop = cut(Doseperpop, breaks = 6))
+```
+
+```{r}
+
+labels_cases <- sprintf("<strong>%s</strong><br/>Population: %g M<br>
+  Dosage per population: %g<br>
+  All dose allocation: %g",
+  states1$name_ns, round(states1$population / (1e6), 2),
+  states1$Doseperpop, states1$All.Dose.Allocations) %>%
+ lapply(htmltools::HTML)
+labels_cases[[1]]
+
+
+
+pal.state.factor <- colorFactor(
+  palette = "YlOrRd",
+  domain = states1@data$Doseperpop
+)
+dmap <- leaflet(states1) %>%
+  setView(-96, 37.8, zoom = 4) %>%
+  addPolygons(fillColor = ~pal.state.factor(Doseperpop),
+    weight = 1, opacity = 0.5,
+    color = "white", dashArray = "3",
+    fillOpacity = 0.9, layerId = ~name_ns,
+    highlight = highlightOptions(
+    weight = 5, color = "#666",
+    dashArray = NULL, fillOpacity = 0.9,
+    bringToFront = TRUE),
+    label = labels_cases,
+    labelOptions = labelOptions(
+    style = list("font-weight" = "normal", padding = "3px 8px"),
+    textsize = "15px", direction = "auto"))
+
+dmap <- dmap %>% addLegend(pal = pal.state.factor, values = ~Doseperpop, 
+            opacity = 0.7, title = "Dosage per population",
+            position = "bottomright")
+
+dmap
+
+saveWidget(dmap, "Figure4.html", selfcontained = F)
+```
+Figure 4
+
+
+

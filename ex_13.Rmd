@@ -1,0 +1,90 @@
+---
+title: "Mandha_663_EX13"
+author: "Harinath Reddy"
+date: "2022-11-21"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(dplyr); library(fable); library(tsibble)
+library(feasts); library(ggplot2); library(tidyr)
+```
+
+```{r}
+library(IDDA)
+data(state.long)
+```
+
+```{r}
+state.ts <- as_tsibble(state.long, key = State)
+```
+
+```{r}
+state.ts <- as_tsibble(state.long, key = State) %>%
+group_by(State) %>%
+mutate(Infected = Infected/1000) %>%
+mutate(YDA_Infected = lag(Infected, order_by = DATE)) %>%
+mutate(YDA_Death = lag(Death, order_by = DATE)) %>%
+mutate(Y.Infected = Infected - YDA_Infected) %>%
+mutate(Y.Death = Death - YDA_Death) %>%
+mutate(cum_infected = cumsum(Infected))%>%
+mutate(cum_death = cumsum(Death)) %>%
+dplyr::filter(!is.na(Y.Infected)) %>%
+dplyr::filter(!is.na(Y.Death)) %>%
+dplyr::select(-c(YDA_Infected, YDA_Death))%>%
+filter(State=="Virginia") 
+
+```
+
+```{r}
+Virginia.ts <- state.ts %>%
+dplyr::filter(State == "Virginia") %>%
+dplyr::select(Infected, Death, cum_infected, cum_death, Y.Death, Y.Infected)
+```
+
+```{r}
+ets_fit <-Virginia.ts %>%
+model(ETS(Y.Death ~ error("A") + trend("N") + season("N"), opt_crit = 
+"mse"))
+
+```
+
+```{r}
+train <- Virginia.ts %>%
+  filter_index("2020-01-23" ~ "2020-12-17")
+n <- nrow(train)
+```
+
+```{r}
+
+le_trends <- train %>%
+  model(
+    linear = TSLM(Y.Death ~ trend()),
+    exponential = TSLM(log(Y.Death + 1) ~ trend()),
+  )
+fc_trends <- le_trends %>% forecast(h = 7)
+
+##Making Predictions
+
+Virginia.ts %>%
+  dplyr::filter(DATE < train$DATE[n] + 14 ) %>%
+  autoplot(Y.Death) +
+  geom_line(data = fitted(le_trends),
+            aes(y = .fitted, color = .model)) +
+  autolayer(fc_trends, alpha = 0.5, level = 95) +
+  labs(y = "Number of deaths", title = "Daily new deaths in Virginia") +
+  theme_bw() +
+theme(legend.position = "bottom")
+
+``` 
+
+
+```{r}
+lm_fit <- train %>%
+  model(lm = TSLM(Y.Death ~ log( Death + 1)))
+report(lm_fit)
+
+
+```
